@@ -8,9 +8,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.gzl.todo.R
+import com.gzl.todo.databinding.ItemTaskBinding
 
 class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDiffCallback()) {
-    inner class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class TaskViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
         private val taskTitleTextView: TextView = itemView.findViewById(R.id.task_title)
         private val taskDescriptionTextView: TextView = itemView.findViewById(R.id.task_description)
 
@@ -21,8 +22,8 @@ class TaskListAdapter : ListAdapter<Task, TaskListAdapter.TaskViewHolder>(TaskDi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_task, parent, false)
-        return TaskViewHolder(itemView)
+        val binding = ItemTaskBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return TaskViewHolder(binding)
     }
 
     override fun getItemCount(): Int {

@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gzl.todo.R
+import com.gzl.todo.databinding.FragmentTaskListBinding
 import java.util.UUID
 
 class TaskListFragment : Fragment() {
@@ -18,21 +19,25 @@ class TaskListFragment : Fragment() {
     )
     private val adapter = TaskListAdapter()
 
+    private var _binding: FragmentTaskListBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_task_list, container, false)
+        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
+        return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val recyclerView = view.findViewById<RecyclerView>(R.id.task_list)
+        val recyclerView = binding.taskList
         recyclerView.adapter = adapter
 
-        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val floatingActionButton = binding.floatingActionButton
         floatingActionButton.setOnClickListener {
             val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
             taskList = taskList + newTask
@@ -40,5 +45,10 @@ class TaskListFragment : Fragment() {
         }
 
         adapter.submitList(taskList)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
