@@ -45,7 +45,7 @@ class TaskListAdapter(private val listener: TaskListListener) : ListAdapter<Task
                     type = "text/plain"
                 }
                 itemView.context.startActivity(Intent.createChooser(shareIntent, null))
-                true // Indicate that the long click was handled
+                true
             }
         }
     }
