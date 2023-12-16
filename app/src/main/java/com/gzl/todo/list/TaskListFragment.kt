@@ -32,9 +32,8 @@ class TaskListFragment : Fragment() {
         }
 
         override fun onClickEdit(task: Task) {
-            // Code to handle the edit action
             val editIntent = Intent(requireContext(), DetailActivity::class.java).apply {
-                putExtra("task", task) // Assuming Task implements Serializable
+                putExtra("task", task)
             }
             editTaskLauncher.launch(editIntent)
         }
@@ -57,11 +56,9 @@ class TaskListFragment : Fragment() {
         if (result.resultCode == Activity.RESULT_OK) {
             val editedTask = result.data?.getSerializableExtra("task") as? Task
             editedTask?.let { task ->
-                // Update the task in your list
                 taskList = taskList.map { existingTask ->
                     if (existingTask.id == task.id) task else existingTask
                 }.toMutableList()
-                // Update the adapter
                 adapter.submitList(taskList)
             }
         }
@@ -78,17 +75,14 @@ class TaskListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        // Assume 'taskList' is the list of tasks you want to save
-        outState.putSerializable("task_list", ArrayList(taskList)) // ArrayList is Serializable
+        outState.putSerializable("task_list", ArrayList(taskList))
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Restore the task list if there is a saved state
         savedInstanceState?.getSerializable("task_list")?.let {
             val savedList = it as? ArrayList<*>
-            // Update your task list and UI with 'savedList'
         }
 
         val recyclerView = binding.taskList
