@@ -31,11 +31,9 @@ class DetailActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // Retrieve the task to be edited or null if adding a new task
             val initialTask = intent.getSerializableExtra("task") as? Task
 
             Detail(initialTask = initialTask) { task ->
-                // Handle the validation of the task (either new or edited)
                 val resultIntent = Intent().apply {
                     putExtra("task", task)
                 }
@@ -48,7 +46,6 @@ class DetailActivity : ComponentActivity() {
 
 @Composable
 fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
-    // Task state with default empty values
     var task by remember { mutableStateOf(initialTask ?: Task(id = UUID.randomUUID().toString(), title = "", description = "")) }
 
     Column(
@@ -57,7 +54,6 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
             .fillMaxSize(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        // TextField for the task title
         OutlinedTextField(
             value = task.title,
             onValueChange = { newTitle ->
@@ -66,7 +62,6 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
             label = { Text("Title") }
         )
 
-        // TextField for the task description
         OutlinedTextField(
             value = task.description,
             onValueChange = { newDescription ->
@@ -76,7 +71,6 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
         )
 
         Button(onClick = {
-            // Return the task object when the validate button is clicked
             onValidate(task)
         }) {
             Text(text = "Validate")
