@@ -6,16 +6,24 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gzl.todo.R
+import com.gzl.todo.data.Api
+import com.gzl.todo.data.TasksListViewModel
 import com.gzl.todo.databinding.FragmentTaskListBinding
 import com.gzl.todo.detail.DetailActivity
+import kotlinx.coroutines.launch
 import java.util.UUID
 
 class TaskListFragment : Fragment() {
+
+    private val viewModel: TasksListViewModel by viewModels()
+
     private var taskList = mutableListOf(
         Task(id = "id_1", title = "Task 1", description = "description 1"),
         Task(id = "id_2", title = "Task 2"),
@@ -96,6 +104,16 @@ class TaskListFragment : Fragment() {
         }
 
         adapter.submitList(taskList.toList())
+
+        lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
+            viewModel.tasksStateFlow.collect { newList ->
+                // cette lambda est exécutée à chaque fois que la liste est mise à jour dans le VM
+                // -> ici, on met à jour la liste dans l'adapter
+                adapter.submitList(newList)
+            }
+        }
+
+        viewModel.refresh()
     }
 
 
@@ -103,5 +121,18 @@ class TaskListFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onResume() {
+        super.onResume()
+        lifecycleScope.launch {
+            val user = Api.userWebService.fetchUser().body()!!
+            val userTextView = view?.findViewById<TextView>(R.id.userTextView)
+            if (userTextView != null) {
+                userTextView.text = user.name
+            }
+        }
+
+        viewModel.refresh();
     }
 }
