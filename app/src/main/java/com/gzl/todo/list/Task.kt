@@ -1,7 +1,16 @@
 package com.gzl.todo.list
 
-import java.io.Serializable
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
-data class Task(val id: String, val title: String, val description: String = "Placeholder description") : Serializable
-{
+@Serializable
+data class Task(
+    @SerialName("id")
+    val id : String,
+    @SerialName("content")
+    val title : String,
+    @SerialName("description")
+    val description : String = "Description de base")
+    : java.io.Serializable {
+
 }

@@ -1,7 +1,9 @@
 package com.gzl.todo.data
 
 import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class User(
     @SerialName("email")
     val email: String,
