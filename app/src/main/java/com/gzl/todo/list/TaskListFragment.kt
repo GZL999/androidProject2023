@@ -6,12 +6,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.RecyclerView
+import coil.load
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gzl.todo.R
 import com.gzl.todo.data.Api
@@ -94,6 +96,8 @@ class TaskListFragment : Fragment() {
             val savedList = it as? ArrayList<*>
         }
 
+        val ImageAvatarButton = view.findViewById<FloatingActionButton>(R.id.imageAvatar)
+
         val recyclerView = binding.taskList
         recyclerView.adapter = adapter
 
@@ -129,8 +133,13 @@ class TaskListFragment : Fragment() {
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             val userTextView = view?.findViewById<TextView>(R.id.userTextView)
+            val userImageAvatar = view?.findViewById<ImageView>(R.id.imageView)
             if (userTextView != null) {
                 userTextView.text = user.name
+            }
+
+            if(userImageAvatar != null){
+                userImageAvatar.load("https://goo.gl/gEgYUd")
             }
         }
 
