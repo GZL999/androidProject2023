@@ -20,6 +20,7 @@ import com.gzl.todo.data.Api
 import com.gzl.todo.data.TasksListViewModel
 import com.gzl.todo.databinding.FragmentTaskListBinding
 import com.gzl.todo.detail.DetailActivity
+import com.gzl.todo.user.UserActivity
 import kotlinx.coroutines.launch
 import java.util.UUID
 
@@ -89,26 +90,75 @@ class TaskListFragment : Fragment() {
         outState.putSerializable("task_list", ArrayList(taskList))
     }
 
+//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+//        super.onViewCreated(view, savedInstanceState)
+//
+//        savedInstanceState?.getSerializable("task_list")?.let {
+//            val savedList = it as? ArrayList<*>
+//        }
+//
+//        val intentUser = Intent(context, UserActivity::class.java)
+//        val intentDetail = Intent(context, DetailActivity::class.java)
+//
+//        val imageAvatarButton = view.findViewById<FloatingActionButton>(R.id.imageAvatar)
+//        imageAvatarButton.setOnClickListener{
+//
+//            startActivity(intentUser)
+//        }
+//
+//        val recyclerView = binding.taskList
+//        recyclerView.adapter = adapter
+//
+//        val floatingActionButton = binding.floatingActionButton
+//        floatingActionButton.setOnClickListener {
+//
+////            val intent = Intent(context, DetailActivity::class.java)
+////            createTaskLauncher.launch(intent)
+//            createTaskLauncher.launch(intentDetail)
+//        }
+//
+//        adapter.submitList(taskList.toList())
+//
+//        lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
+//            viewModel.tasksStateFlow.collect { newList ->
+//                // cette lambda est exécutée à chaque fois que la liste est mise à jour dans le VM
+//                // -> ici, on met à jour la liste dans l'adapter
+//                adapter.submitList(newList)
+//            }
+//        }
+//
+//        viewModel.refresh()
+//    }
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        savedInstanceState?.getSerializable("task_list")?.let {
-            val savedList = it as? ArrayList<*>
-        }
-
-        val ImageAvatarButton = view.findViewById<FloatingActionButton>(R.id.imageAvatar)
-
         val recyclerView = binding.taskList
         recyclerView.adapter = adapter
+        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val imageAvatarButton = view.findViewById<ImageView>(R.id.imageAvatar)
 
-        val floatingActionButton = binding.floatingActionButton
-        floatingActionButton.setOnClickListener {
-
-            val intent = Intent(context, DetailActivity::class.java)
-            createTaskLauncher.launch(intent)
+        val intentDetail = Intent(context, DetailActivity::class.java)
+        val intentUser = Intent(context, UserActivity::class.java)
+        floatingActionButton.setOnClickListener{
+            //val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
+            //taskList = taskList + newTask
+            //adapter.submitList(taskList)
+            //startActivity(intent)
+            createTaskLauncher.launch(intentDetail)
         }
 
-        adapter.submitList(taskList.toList())
+        imageAvatarButton.setOnClickListener{
+
+            startActivity(intentUser)
+        }
+
+        //var sizeTaskList = savedInstanceState?.getSerializable("nbTask")//.toString().toInt()
+        val sizeTaskList = savedInstanceState?.getSerializable("tasklist") as? Array<Task>
+
+        taskList = (sizeTaskList?.toList() ?: emptyList()).toMutableList()
+
+        recyclerView.adapter = adapter
+        adapter.submitList(taskList)
 
         lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
             viewModel.tasksStateFlow.collect { newList ->
@@ -119,9 +169,8 @@ class TaskListFragment : Fragment() {
         }
 
         viewModel.refresh()
+
     }
-
-
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -133,13 +182,15 @@ class TaskListFragment : Fragment() {
         lifecycleScope.launch {
             val user = Api.userWebService.fetchUser().body()!!
             val userTextView = view?.findViewById<TextView>(R.id.userTextView)
-            val userImageAvatar = view?.findViewById<ImageView>(R.id.imageView)
+            val userImageAvatar = view?.findViewById<ImageView>(R.id.imageAvatar)
             if (userTextView != null) {
                 userTextView.text = user.name
             }
 
             if(userImageAvatar != null){
-                userImageAvatar.load("https://goo.gl/gEgYUd")
+                userImageAvatar.load(user.avatar) {
+                    error(R.drawable.ic_launcher_background) // image par défaut en cas d'erreur
+                }
             }
         }
 
