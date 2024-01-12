@@ -1,6 +1,5 @@
 package com.gzl.todo.list
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -18,13 +17,11 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gzl.todo.R
 import com.gzl.todo.data.Api
 import com.gzl.todo.data.TasksListViewModel
-import com.gzl.todo.databinding.FragmentTaskListBinding
 import com.gzl.todo.detail.DetailActivity
 import com.gzl.todo.user.UserActivity
 import kotlinx.coroutines.launch
-import java.util.UUID
 
-class TaskListFragment : Fragment() {
+class TaskListFragment<RecyclerView : View?> : Fragment() {
 
     private val viewModel: TasksListViewModel by viewModels()
 
@@ -34,116 +31,61 @@ class TaskListFragment : Fragment() {
         Task(id = "id_3", title = "Task 3")
     )
 
-    private var _binding: FragmentTaskListBinding? = null
-    private val binding get() = _binding!!
-
-    private val adapterListener = object : TaskListListener {
-        override fun onClickDelete(task: Task) {
-            taskList.remove(task)
-            adapter.submitList(taskList.toList())
-        }
-
-        override fun onClickEdit(task: Task) {
-            val editIntent = Intent(requireContext(), DetailActivity::class.java).apply {
-                putExtra("task", task)
-            }
-            editTaskLauncher.launch(editIntent)
-        }
-    }
-
-    private val adapter:TaskListAdapter = TaskListAdapter(adapterListener)
-
     private val createTaskLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val task = result.data?.getSerializableExtra("task") as Task?
-            task?.let {
-                taskList.add(it)
-                adapter.submitList(taskList.toList())
-                adapter.notifyItemInserted(taskList.size-1)
-            }
+        val task = result.data?.getSerializableExtra("task") as Task?
+        if (task != null){
+            viewModel.add(task)
         }
     }
 
     private val editTaskLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) {
-            val editedTask = result.data?.getSerializableExtra("task") as? Task
-            editedTask?.let { task ->
-                taskList = taskList.map { existingTask ->
-                    if (existingTask.id == task.id) task else existingTask
-                }.toMutableList()
-                adapter.submitList(taskList)
-            }
+        val task = result.data?.getSerializableExtra("task") as Task?
+        if (task != null){
+            viewModel.edit(task)
         }
     }
 
+    val adapterListener : TaskListListener = object : TaskListListener {
+        override fun onClickDelete(task: Task) {
+            viewModel.remove(task)
+        }
+
+        override fun onClickEdit(task: Task) {
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra("task", task)
+            editTaskLauncher.launch(intent)
+        }
+
+        override fun onLongClickListener(task: Task) : Boolean {
+            val sendIntent: Intent = Intent().apply {
+                action = Intent.ACTION_SEND
+                putExtra(Intent.EXTRA_TEXT, "Titre: "+ task.title+ "\nDescription: "+ task.description)
+                type = "text/plain"
+            }
+            val shareIntent = Intent.createChooser(sendIntent, null)
+            startActivity(shareIntent)
+            return true
+        }
+    }
+
+    private val adapter = TaskListAdapter(adapterListener)
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentTaskListBinding.inflate(inflater, container, false)
-        return binding.root
+
+        return inflater.inflate(R.layout.fragment_task_list, container, false)
     }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable("task_list", ArrayList(taskList))
-    }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//
-//        savedInstanceState?.getSerializable("task_list")?.let {
-//            val savedList = it as? ArrayList<*>
-//        }
-//
-//        val intentUser = Intent(context, UserActivity::class.java)
-//        val intentDetail = Intent(context, DetailActivity::class.java)
-//
-//        val imageAvatarButton = view.findViewById<FloatingActionButton>(R.id.imageAvatar)
-//        imageAvatarButton.setOnClickListener{
-//
-//            startActivity(intentUser)
-//        }
-//
-//        val recyclerView = binding.taskList
-//        recyclerView.adapter = adapter
-//
-//        val floatingActionButton = binding.floatingActionButton
-//        floatingActionButton.setOnClickListener {
-//
-////            val intent = Intent(context, DetailActivity::class.java)
-////            createTaskLauncher.launch(intent)
-//            createTaskLauncher.launch(intentDetail)
-//        }
-//
-//        adapter.submitList(taskList.toList())
-//
-//        lifecycleScope.launch { // on lance une coroutine car `collect` est `suspend`
-//            viewModel.tasksStateFlow.collect { newList ->
-//                // cette lambda est exécutée à chaque fois que la liste est mise à jour dans le VM
-//                // -> ici, on met à jour la liste dans l'adapter
-//                adapter.submitList(newList)
-//            }
-//        }
-//
-//        viewModel.refresh()
-//    }
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        val recyclerView = binding.taskList
-        recyclerView.adapter = adapter
-        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton)
+        val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.gzl)
+        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton2)
         val imageAvatarButton = view.findViewById<ImageView>(R.id.imageAvatar)
 
         val intentDetail = Intent(context, DetailActivity::class.java)
         val intentUser = Intent(context, UserActivity::class.java)
         floatingActionButton.setOnClickListener{
-            //val newTask = Task(id = UUID.randomUUID().toString(), title = "Task ${taskList.size + 1}")
-            //taskList = taskList + newTask
-            //adapter.submitList(taskList)
-            //startActivity(intent)
             createTaskLauncher.launch(intentDetail)
         }
 
@@ -172,14 +114,15 @@ class TaskListFragment : Fragment() {
 
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
+    override fun onSaveInstanceState(outState: Bundle) {
+        outState.putSerializable("tasklist",taskList.toTypedArray())
+        super.onSaveInstanceState(outState)
     }
 
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
+            // Ici on ne va pas gérer les cas d'erreur donc on force le crash avec "!!"
             val user = Api.userWebService.fetchUser().body()!!
             val userTextView = view?.findViewById<TextView>(R.id.userTextView)
             val userImageAvatar = view?.findViewById<ImageView>(R.id.imageAvatar)
@@ -192,8 +135,11 @@ class TaskListFragment : Fragment() {
                     error(R.drawable.ic_launcher_background) // image par défaut en cas d'erreur
                 }
             }
+            userImageAvatar?.load(user.avatar) {
+                error(R.drawable.ic_launcher_background) // image par défaut en cas d'erreur
+            }
         }
 
-        viewModel.refresh();
+        viewModel.refresh()
     }
 }

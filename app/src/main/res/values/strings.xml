@@ -5,4 +5,5 @@
     <string name="title_activity_detail">DetailActivity</string>
     <string name="open_detail_activity">Open Detail Activity</string>
     <string name="edit_task" />
+    <string name="textview">Placeholder\n</string>
 </resources>
