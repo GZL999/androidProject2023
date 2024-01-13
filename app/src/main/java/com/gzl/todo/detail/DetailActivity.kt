@@ -81,7 +81,7 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
             onValueChange = { newTitle ->
                 task = task.copy(title = newTitle)
             },
-            label = { Text("Title") },
+            label = { Text("Task name") },
             modifier = Modifier.fillMaxWidth()
         )
 
@@ -91,7 +91,7 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
             onValueChange = { newDescription ->
                 task = task.copy(description = newDescription)
             },
-            label = { Text("Description") },
+            label = { Text("Task description") },
             modifier = Modifier.fillMaxWidth()
         )
 

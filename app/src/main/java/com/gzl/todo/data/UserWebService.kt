@@ -1,6 +1,7 @@
 package com.gzl.todo.data
 
 import android.graphics.Bitmap
+import com.gzl.todo.user.UserUpdate
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import retrofit2.Response
@@ -20,8 +21,8 @@ interface UserWebService {
     @POST("sync/v9/update_avatar")
     suspend fun updateAvatar(@Part avatar: MultipartBody.Part): Response<User>
 
-//    @PATCH("sync/v9/sync")
-//    suspend fun update(@Body userUpdate: UserUpdate): Response<Unit>
+    @PATCH("sync/v9/sync")
+    suspend fun update(@Body userUpdate: UserUpdate): Response<Unit>
     private fun Bitmap.toRequestBody(): MultipartBody.Part {
         val tmpFile = File.createTempFile("avatar", "jpg")
         tmpFile.outputStream().use { // *use*: open et close automatiquement

@@ -20,12 +20,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -40,9 +44,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import coil.compose.AsyncImage
 import com.gzl.todo.R
 import com.gzl.todo.data.Api
+import com.gzl.todo.data.Api.userWebService
 import com.gzl.todo.data.UserViewModel
 import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
@@ -55,9 +61,15 @@ class UserActivity : AppCompatActivity() {
         contentResolver.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, ContentValues())
     }
 
+    private var user by mutableStateOf("")
+
     private val viewModel : UserViewModel by viewModels()
+    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        lifecycleScope.launch {
+            user = userWebService.fetchUser().body()!!.name
+        }
 
         setContent {
             var bitmap: Bitmap? by remember { mutableStateOf(null) }
@@ -94,7 +106,7 @@ class UserActivity : AppCompatActivity() {
             ) {
                 // Title
                 Text(
-                    text = "New picture preview (blank means no change)",
+                    text = "Change username/picture",
                     fontSize = 20.sp,
                     color = Color.Black,
                     fontWeight = FontWeight.Bold,
@@ -156,6 +168,28 @@ class UserActivity : AppCompatActivity() {
                         content = {
                             Text("Pick Photo", color = Color.White)
                         }
+                    )
+                }
+
+                Column(
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    OutlinedTextField(
+                        value = user,
+                        onValueChange = { newName -> user = newName },
+                        label = {Text("Enter new username")}
+                    )
+                    Button(
+                        onClick = {
+                            scope.launch {
+                                userWebService.update(UserUpdate(user))
+                            }
+                        },
+                        content = { Text("Validate") }
                     )
                 }
             }
