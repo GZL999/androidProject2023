@@ -65,7 +65,7 @@ fun Detail(initialTask: Task? = null, onValidate: (Task) -> Unit) {
     ) {
         // Title
         Text(
-            text = "ADD A TASK TO THE LIST",
+            text = "Add a new task to the list",
             fontSize = 20.sp,
             color = Color.Black,
             fontWeight = FontWeight.Bold,
