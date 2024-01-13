@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:padding="10dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="6dp"
         android:textColor="@android:color/black"
         android:background="@color/light_cream"
         tools:text="Text Description Test" />

@@ -36,12 +36,14 @@
     <ImageView
         android:id="@+id/imageAvatar"
         android:layout_width="65dp"
-        android:layout_height="53dp"
+        android:layout_height="65dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
+        android:clipToOutline="true"
         tools:src="@tools:sample/avatars" />
+
 
     <TextView
         android:id="@+id/userTextView"
