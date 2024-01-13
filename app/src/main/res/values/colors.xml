@@ -2,12 +2,15 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="background_gradient_start">#000000</color>
-    <color name="background_gradient_end">#DDDDDD</color>
+    <color name="delete_button">#B30000</color>
+    <color name="background_gradient_start">#A85799</color>
+    <color name="background_gradient_end">#5E2A86</color>
     <color name="fastlane_background">#0096a6</color>
     <color name="search_opaque">#ffaa3f</color>
     <color name="selected_background">#ffaa3f</color>
     <color name="default_background">#3d3d3d</color>
     <color name="my_custom_color">#FF4081</color>
     <color name="purple_500">#9c27b0</color>
+    <color name="cream">#FFDAB9</color>
+    <color name="light_cream">#FFF5E1</color>
 </resources>

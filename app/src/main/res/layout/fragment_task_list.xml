@@ -5,48 +5,57 @@
     android:id="@+id/frameLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/default_background"
     tools:context=".list.TaskListFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/gzl"
         android:layout_width="374dp"
         android:layout_height="600dp"
+        android:layout_marginTop="10dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/imageAvatar"
         tools:ignore="MissingConstraints,UnknownId"
         tools:layout_editor_absoluteX="20dp" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/floatingActionButton2"
+        android:id="@+id/floatingActionButtonAddTask"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="16dp"
         android:clickable="true"
         android:src="@drawable/baseline_assignment_24"
+        app:backgroundTint="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/gzl" />
+        app:layout_constraintTop_toBottomOf="@+id/gzl"
+        android:text="Add task" />
+
+
+    <ImageView
+        android:id="@+id/imageAvatar"
+        android:layout_width="65dp"
+        android:layout_height="53dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        tools:src="@tools:sample/avatars" />
 
     <TextView
         android:id="@+id/userTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/textview"
-        app:layout_constraintBottom_toTopOf="@+id/gzl"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <ImageView
-        android:id="@+id/imageAvatar"
-        android:layout_width="65dp"
-        android:layout_height="53dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/userTextView"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@tools:sample/avatars" />
+        app:layout_constraintEnd_toStartOf="@+id/imageAvatar"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:textStyle="bold"
+        android:textColor="@color/black"/>
+
+
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

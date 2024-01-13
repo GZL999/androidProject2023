@@ -11,7 +11,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.gzl.todo.R
@@ -80,7 +79,7 @@ class TaskListFragment<RecyclerView : View?> : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         val recyclerView = view.findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.gzl)
-        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButton2)
+        val floatingActionButton = view.findViewById<FloatingActionButton>(R.id.floatingActionButtonAddTask)
         val imageAvatarButton = view.findViewById<ImageView>(R.id.imageAvatar)
 
         val intentDetail = Intent(context, DetailActivity::class.java)
