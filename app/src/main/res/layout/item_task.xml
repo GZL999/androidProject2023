@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,36 +9,55 @@
         android:id="@+id/task_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_blue_bright"
+        android:background="@color/purple_500"
+        android:textColor="@android:color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:padding="10dp"
         tools:text="Text Test" />
 
     <TextView
         android:id="@+id/textDescriptor"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
         tools:text="Text Description Test" />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp">
 
-        <ImageButton
+        <Button
             android:id="@+id/imageButtonEdit"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_height="47dp"
             android:layout_weight="1"
-            android:src="@android:drawable/ic_menu_edit"
-            tools:src="@android:drawable/ic_menu_edit"
-            android:contentDescription="TODO" />
+            android:layout_marginRight="10dp"
+            android:text="Edit task"
+            android:background="@drawable/button_background"
+            android:drawableLeft="@android:drawable/ic_menu_edit"
+            android:drawablePadding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="10dp"/>
 
-        <ImageButton
+        <Button
             android:id="@+id/imageButton"
-            android:layout_width="205dp"
-            android:layout_height="wrap_content"
-            android:src="@android:drawable/ic_menu_delete"
-            android:contentDescription="TODO" />
+            android:layout_width="0dp"
+            android:layout_height="47dp"
+            android:layout_weight="1"
+            android:text="Delete task"
+            android:background="@drawable/button_background"
+            android:drawableLeft="@android:drawable/ic_menu_delete"
+            android:drawablePadding="10dp"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:padding="10dp"/>
+
     </LinearLayout>
-
-
 </LinearLayout>
+

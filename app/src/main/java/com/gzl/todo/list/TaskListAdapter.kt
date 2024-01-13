@@ -3,6 +3,7 @@ package com.gzl.todo.list
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
@@ -25,8 +26,8 @@ class TaskListAdapter(val listener: TaskListListener) : ListAdapter<Task, TaskLi
         fun bind(task: Task) {
             itemView.findViewById<TextView>(R.id.task_title).setText(task.title);
             itemView.findViewById<TextView>(R.id.textDescriptor).setText(task.description);
-            itemView.findViewById<ImageButton>(R.id.imageButton).setOnClickListener {listener.onClickDelete(task)}
-            itemView.findViewById<ImageButton>(R.id.imageButtonEdit).setOnClickListener {listener.onClickEdit(task)}
+            itemView.findViewById<Button>(R.id.imageButton).setOnClickListener {listener.onClickDelete(task)}
+            itemView.findViewById<Button>(R.id.imageButtonEdit).setOnClickListener {listener.onClickEdit(task)}
             itemView.findViewById<TextView>(R.id.task_title).setOnLongClickListener {listener.onLongClickListener(task)} //a changer pour prendre toute la task
         }
     }
