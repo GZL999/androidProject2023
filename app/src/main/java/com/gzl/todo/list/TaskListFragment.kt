@@ -89,8 +89,8 @@ class TaskListFragment<RecyclerView : View?> : Fragment() {
         }
 
         imageAvatarButton.setOnClickListener{
-
-            startActivity(intentUser)
+            startActivity(Intent(context, UserActivity::class.java))
+            //startActivity(intentUser)
         }
 
         //var sizeTaskList = savedInstanceState?.getSerializable("nbTask")//.toString().toInt()
